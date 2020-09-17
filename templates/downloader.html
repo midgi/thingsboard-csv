@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>ThingsDownloader</title>
+    <script
+        src="https://code.jquery.com/jquery-3.5.1.min.js"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+    <!-- <link rel="stylesheet" href="/assets/css/login.css"> -->
+    <script src="/assets/js/downloader.js"></script>
+    <script src="/assets/js/jquery.datetimepicker.full.js"></script>
+    <link rel="stylesheet" href="/assets/css/jquery.datetimepicker.min.css">
+</head>
+<body>
+    <div class="container d-flex h-100 w-100">
+      <div class="row justify-content-center align-self-center w-100">
+        <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+          <div class="card card-signin my-5">
+            <div class="card-body">
+              <h5 class="card-title text-center">Exportación de datos thingsboard</h5>
+              <form action="/download" method="POST">
+                <div class="form-group" >
+                    <label for="inputCustomer">Cliente</label>
+                    <select name="inputCustomer" id="inputCustomer" class="form-control" required>
+                      {%for customer in customer_list%} 
+                          <option value="{{customer['id']['id']}}">{{customer['title']}}</option>
+                      {%endfor%} 
+                    </select>
+                </div>
+                <div class="form-group">
+                  <label for="inputDevice">Dispositivo</label>
+                  <select name="inputDevice" id="inputDevice" class="form-control" required>
+                    {%for device in device_list%} 
+                      <option value="{{device['id']['id']}}">{{device['name']}}</option>
+                    {%endfor%} 
+                  </select>
+                </div>
+                <div class="form-group">
+                    <label for="inputStartTime">Inicio</label>
+                    <input name="inputStartTime" type="text" id="inputStartTime" class="form-control datetime"required>
+                </div>
+                <div class="form-group">
+                  <label for="inputEndTime">Fin</label>
+                  <input name="inputEndTime" type="text" id="inputEndTime" class="form-control datetime"required>
+                </div>
+                <div class="form-group">
+                  <label for="inputKeys">Variables</label>
+                  <select name="inputKeys[]" id="inputKeys" class="form-control select2-multitag" multiple="multiple" required>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <input type="hidden" name="host" value="{{host}}">
+                  <input type="hidden" name="port" value="{{port}}">
+                  <input type="hidden" name="token" value="{{token}}">
+                </div>
+                <button class="btn btn-primary float-right" type="submit">Descargar</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
