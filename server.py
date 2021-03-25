@@ -39,10 +39,10 @@ def downloader():
     token       = request.args.get('token')
     thingsboard = ThingsBoardHTTP(host, port=port)
     thingsboard.userToken = token
-
-    customer_list = thingsboard.customerList(1, 10)['data']
-    device_list = thingsboard.customerDeviceList(customer_list[0]['id']['id'], 1, 10)['data']
-    
+    print("token: %s"%token)
+    customer_list = thingsboard.customerList(0, 10)['data']
+    device_list = thingsboard.customerDeviceList(customer_list[0]['id']['id'], 0, 10)['data']
+    print("device_list: ",device_list)
     return render_template("downloader.html", customer_list = customer_list, 
         device_list = device_list, token=token, port=port, host=host)
 
@@ -78,7 +78,7 @@ def devices():
     customerId              = request.args.get('customer')
     thingsboard             = ThingsBoardHTTP(host, port=port)
     thingsboard.userToken   = token
-    device_list = thingsboard.customerDeviceList(customerId, 1, 10)['data']
+    device_list = thingsboard.customerDeviceList(customerId, 0, 10)['data']
     html = ""
     for device in device_list:
         html += '<option value="%s">%s</option>'%(device["id"]["id"], device["name"])

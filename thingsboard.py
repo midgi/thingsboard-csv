@@ -79,10 +79,10 @@ class ThingsBoardHTTP:
         except:
             return False
 
-    def customerDeviceList(self, customerId, page, limit):
+    def customerDeviceList(self, customerId, page, pageSize):
         headers = {'Accept': 'application/json','X-Authorization': self.userToken}
-        url 	= 'http://%s:%d/api/customer/%s/devices?limit=%d&page=%d'%(
-            self.host, self.port, customerId, limit, page
+        url 	= 'http://%s:%d/api/customer/%s/devices?pageSize=%d&page=%d'%(
+            self.host, self.port, customerId, pageSize, page
         )
         print(url)
         try:
@@ -94,7 +94,7 @@ class ThingsBoardHTTP:
     
     def customerList(self, page, pageSize):
         headers = {'Accept': 'application/json','X-Authorization': self.userToken}
-        url 	= 'http://%s:%d/api/customers?limit=%d&page=%d'%(
+        url 	= 'http://%s:%d/api/customers?pageSize=%d&page=%d'%(
             self.host, self.port, pageSize, page
         )
         print(url)
@@ -111,15 +111,15 @@ class ThingsBoardHTTP:
     # endTs - unix timestamp that identifies end of the interval in milliseconds.
     # interval - the aggregation interval, in milliseconds.
     # agg - the aggregation function. One of MIN, MAX, AVG, SUM, COUNT, NONE.
-    # limit - the max amount of data points to return or intervals to process.
-    def getTimeSeries(self, deviceID, keys, startTs, endTs, interval = 1000, limit = 10000, agg = None):
+    # pageSize - the max amount of data points to return or intervals to process.
+    def getTimeSeries(self, deviceID, keys, startTs, endTs, interval = 1000, pageSize = 10000, agg = None):
         headers = {'Content-Type': 'application/json','X-Authorization': self.userToken}
         keyss = ','.join(keys)
-        url = "http://%s:%d/api/plugins/telemetry/DEVICE/%s/values/timeseries?keys=%s&startTs=%d&endTs=%d&interval=%d&limit=%d"%(
-            self.host, self.port, deviceID, keyss, startTs, endTs, interval, limit
+        url = "http://%s:%d/api/plugins/telemetry/DEVICE/%s/values/timeseries?keys=%s&startTs=%d&endTs=%d&interval=%d&pageSize=%d"%(
+            self.host, self.port, deviceID, keyss, startTs, endTs, interval, pageSize
         )
-        # url = "http://%s:%d/api/plugins/telemetry/DEVICE/%s/values/timeseries?keys=%s&startTs=%d&endTs=%d&limit=%d"%(
-        # 	self.host, self.port, deviceID, keyss, startTs, endTs, limit
+        # url = "http://%s:%d/api/plugins/telemetry/DEVICE/%s/values/timeseries?keys=%s&startTs=%d&endTs=%d&pageSize=%d"%(
+        # 	self.host, self.port, deviceID, keyss, startTs, endTs, pageSize
         # )
         print(url)
         if not agg is None:
@@ -127,7 +127,7 @@ class ThingsBoardHTTP:
 
         try:
             r = requests.get(url = url, headers = headers, timeout = self.timeout)
-            print(r.text)
+            # print(r.text)
             if r.status_code == 200:
                 return r.json()
             
@@ -138,11 +138,12 @@ class ThingsBoardHTTP:
         # curl -v -X GET "http://localhost:8080/api/plugins/telemetry'
         # '/DEVICE/ac8e6020-ae99-11e6-b9bd-2b15845ada4e/values
         # '/timeseries?keys=gas,temperature'
-        # '&startTs=1479735870785&endTs=1479735871858&interval=60000&limit=100&agg=AVG" \
+        # '&startTs=1479735870785&endTs=1479735871858&interval=60000&pageSize=100&agg=AVG" \
         # --header "Content-Type:application/json" \
         # --header "X-Authorization: $JWT_TOKEN"
 def thingsboardJSON2CSV(data):
     # data = json.loads(data)
+    # print(data)
     keys = list(data.keys())
     length = len(data[keys[0]])
     last_key_data_idx = [0]*len(keys)
